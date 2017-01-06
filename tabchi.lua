@@ -131,14 +131,7 @@ function process(msg)
       return "*Javab Baraye* " .. matches[2] .. " ," .. matches[3] *Shod*
     end
   end
-  do
-    local matches = {
-      msg.text:match("^[!/#](help) '(.*)' (.*)")
-    }
-    if msg.text:match("^[!/#]help") and is_sudo(msg) and #matches == 3 then
-      return "*Javab Baraye* " .. matches[2] .. " ," .. matches[3] *Shod*
-    end
-  end
+  
   do
     local matches = {
       msg.text:match("^[!/#](delanswer) (.*)")
