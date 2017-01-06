@@ -118,7 +118,7 @@ function process(msg)
     }
     if msg.text:match("^[!/#]pm") and is_sudo(msg) and #matches == 3 then
       tdcli.sendMessage(tonumber(matches[2]), 0, 1, matches[3], 1, "md")
-      return "Message has been sent"
+      return "Pm Shoma Ersal Shod 👍🏻"
     end
   end
   do
@@ -128,7 +128,15 @@ function process(msg)
     if msg.text:match("^[!/#]setanswer") and is_sudo(msg) and #matches == 3 then
       redis:hset("tabchi:" .. tabchi_id .. ":answers", matches[2], matches[3])
       redis:sadd("tabchi:" .. tabchi_id .. ":answerslist", matches[2])
-      return "Answer for " .. matches[2] .. " set to " .. matches[3]
+      return "*Javab Baraye* " .. matches[2] .. " ," .. matches[3] *Shod*
+    end
+  end
+  do
+    local matches = {
+      msg.text:match("^[!/#](help) '(.*)' (.*)")
+    }
+    if msg.text:match("^[!/#]help") and is_sudo(msg) and #matches == 3 then
+      return "*Javab Baraye* " .. matches[2] .. " ," .. matches[3] *Shod*
     end
   end
   do
@@ -138,7 +146,7 @@ function process(msg)
     if msg.text:match("^[!/#]delanswer") and is_sudo(msg) and #matches == 2 then
       redis:hdel("tabchi:" .. tabchi_id .. ":answers", matches[2])
       redis:srem("tabchi:" .. tabchi_id .. ":answerslist", matches[2])
-      return "Answer for " .. matches[2] .. " deleted"
+      return "*Javab* , " .. matches[2] .. " *Hazf Shod*"
     end
   end
   if msg.text:match("^[!/#]answers$") and is_sudo(msg) then
@@ -149,7 +157,7 @@ function process(msg)
     end
     return text
   end
-  if msg.text:match("^[!/#]addmembers$") and is_sudo(msg) and chat_type(msg.chat_id_) ~= "private" then
+  if msg.text:match("^[!/#]addmember$") and is_sudo(msg) and chat_type(msg.chat_id_) ~= "private" then
     tdcli_function({
       ID = "SearchContacts",
       query_ = nil,
@@ -169,8 +177,8 @@ function process(msg)
     })
     return
   end
-  if msg.text:match("^[!/#]exportlinks$") and is_sudo(msg) then
-    local text = "Group Links :\n"
+  if msg.text:match("^[!/#]links$") and is_sudo(msg) then
+    local text = "*Link Gp Ha* :\n"
     local links = redis:smembers("tabchi:" .. tabchi_id .. ":savedlinks")
     for i = 1, #links do
       text = text .. links[i] .. "\n"
@@ -181,23 +189,24 @@ function process(msg)
   end
   do
     local matches = {
-      msg.text:match("[!/#](block) (%d+)")
+      msg.text:match("[!/#](ban) (%d+)")
     }
-    if msg.text:match("^[!/#]block") and is_sudo(msg) and #matches == 2 then
+    if msg.text:match("^[!/#]ban") and is_sudo(msg) and #matches == 2 then
       tdcli.blockUser(tonumber(matches[2]))
-      return "User blocked"
+      return "User *Baned*
+_Baraye UnBan Az_ */unban* _Estafade Konid_"
     end
   end
   do
     local matches = {
-      msg.text:match("[!/#](unblock) (%d+)")
+      msg.text:match("[!/#](unban) (%d+)")
     }
-    if msg.text:match("^[!/#]unblock") and is_sudo(msg) and #matches == 2 then
+    if msg.text:match("^[!/#]unbban") and is_sudo(msg) and #matches == 2 then
       tdcli.unblockUser(tonumber(matches[2]))
       return "User unblocked"
     end
   end
-  if msg.text:match("^[!/#]panel$") and is_sudo(msg) then
+  if msg.text:match("^[!/#]info$") and is_sudo(msg) then
     do
       local gps = redis:scard("tabchi:" .. tabchi_id .. ":groups")
       local sgps = redis:scard("tabchi:" .. tabchi_id .. ":channels")
@@ -217,11 +226,15 @@ function process(msg)
           }, dl_cb, nil)
         else
           local text = [[
-*Normal stats :*
-Users : ]] .. pvs .. [[
-Groups : ]] .. gps .. [[
-SuperGroups : ]] .. sgps .. [[
-Saved links : ]] .. links
+*RoBot Informetion*🤖
+🔃`Akhrin Vazeeiate RoBot Shoma`
+
+🔰*Users* ~> ]] .. pvs .. [[
+🔰*Groups* ~> ]] .. gps .. [[
+🔰*SuperGroups* ~> ]] .. sgps .. [[
+🔰*Saved links* ~> ]] .. links
+
+_Made In Iran_ 🇮🇷
           tdcli.sendMessage(msg.chat_id_, 0, 1, text, 1, "md")
         end
       end
@@ -243,10 +256,10 @@ Saved links : ]] .. links
   end
   do
     local matches = {
-      msg.text:match("^[!/#](addsudo) (%d+)")
+      msg.text:match("^[!/#](sudo) (%d+)")
     }
-    if msg.text:match("^[!/#]addsudo") and is_full_sudo(msg) and #matches == 2 then
-      local text = matches[2] .. " Added to *Sudo Users*"
+    if msg.text:match("^[!/#]sudo") and is_full_sudo(msg) and #matches == 2 then
+      local text = matches[2] .. "💡Add *Shodi* Dadash  ͡° ͜ʖ ͡°"
       redis:sadd("tabchi:" .. tabchi_id .. ":sudoers", tonumber(matches[2]))
       return text
     end
@@ -256,22 +269,22 @@ Saved links : ]] .. links
       msg.text:match("^[!/#](remsudo) (%d+)")
     }
     if msg.text:match("^[!/#]remsudo") and is_full_sudo(msg) and #matches == 2 then
-      local text = matches[2] .. " Removed From *Sudo Users*"
+      local text = matches[2] .. "💡Remove *Shodi* Dadash  ͡° ͜ʖ ͡°"
       redis:srem("tabchi:" .. tabchi_id .. ":sudoers", tonumber(matches[2]))
       return text
     end
   end
   do
     local matches = {
-      msg.text:match("^[!/#](addedmsg) (.*)")
+      msg.text:match("^[!/#](number) (.*)")
     }
-    if msg.text:match("^[!/#]addedmsg") and is_sudo(msg) and #matches == 2 then
+    if msg.text:match("^[!/#]number") and is_sudo(msg) and #matches == 2 then
       if matches[2] == "on" then
         redis:set("tabchi:" .. tabchi_id .. ":addedmsg", true)
-        return "Added Message Turned On"
+        return "*Number On* ~>> `Savesh Mikonam`"
       elseif matches[2] == "off" then
         redis:del("tabchi:" .. tabchi_id .. ":addedmsg")
-        return "Added Message Turned Off"
+        return "*Number Off* ~> `Harjor Dost Dari`"
       end
     end
   end
@@ -282,22 +295,22 @@ Saved links : ]] .. links
     if msg.text:match("^[!/#]markread") and is_sudo(msg) and #matches == 2 then
       if matches[2] == "on" then
         redis:set("tabchi:" .. tabchi_id .. ":markread", true)
-        return "Markread Turned On"
+        return "☑️ *Mark Read Faal Shod*"
       elseif matches[2] == "off" then
         redis:del("tabchi:" .. tabchi_id .. ":markread")
-        return "Markread Turned Off"
+        return "☑️ *Mark Read Gheir Faal Shod*"
       end
     end
   end
   do
     local matches = {
-      msg.text:match("^[!/#](setaddedmsg) (.*)")
+      msg.text:match("^[!/#](msgnumber) (.*)")
     }
-    if msg.text:match("^[!/#]setaddedmsg") and is_sudo(msg) and #matches == 2 then
+    if msg.text:match("^[!/#]msgnumber") and is_sudo(msg) and #matches == 2 then
       redis:set("tabchi:" .. tabchi_id .. ":addedmsgtext", matches[2])
       return [[
-New Added Message Set!
-Message :
+Pm Shoma *Save* Shod 👍
+Pm 📝
 ]] .. matches[2]
     end
   end
@@ -310,7 +323,7 @@ Message :
       return result
     end
   end
-  if msg.text:match("^[!/#]bc") and is_sudo(msg) then
+  if msg.text:match("^[!/#]send") and is_sudo(msg) then
     local all = redis:smembers("tabchi:" .. tabchi_id .. ":all")
     local matches = {
       msg.text:match("[!/#](bc) (.*)")
@@ -355,7 +368,7 @@ Message :
     end
     return "Sent!"
   end
-  if msg.text:match("^[!/#]fwd gps$") and msg.reply_to_message_id_ and is_sudo(msg) then
+  if msg.text:match("^[!/#]fwd gp$") and msg.reply_to_message_id_ and is_sudo(msg) then
     local all = redis:smembers("tabchi:" .. tabchi_id .. ":groups")
     local id = msg.reply_to_message_id_
     for i = 1, #all do
@@ -370,9 +383,9 @@ Message :
         from_background_ = 1
       }, dl_cb, nil)
     end
-    return "Sent!"
+    return "`Pm Ersal Shod`!"
   end
-  if msg.text:match("^[!/#]fwd sgps$") and msg.reply_to_message_id_ and is_sudo(msg) then
+  if msg.text:match("^[!/#]fwd sgp$") and msg.reply_to_message_id_ and is_sudo(msg) then
     local all = redis:smembers("tabchi:" .. tabchi_id .. ":channels")
     local id = msg.reply_to_message_id_
     for i = 1, #all do
@@ -387,7 +400,7 @@ Message :
         from_background_ = 1
       }, dl_cb, nil)
     end
-    return "Sent!"
+    return "`Pm Ersal Shod`!"
   end
   if msg.text:match("^[!/#]addtoall") and msg.reply_to_message_id_ and is_sudo(msg) then
     tdcli_function({
@@ -412,7 +425,7 @@ Message :
         from_background_ = 1
       }, dl_cb, nil)
     end
-    return "Sent!"
+    return "`Pm Ersal Shod`!"
   end
   do
     local matches = {
